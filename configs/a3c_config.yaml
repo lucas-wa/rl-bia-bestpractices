@@ -1,0 +1,19 @@
+# A3C Hyperparameters
+agent_name: "A3C"
+env_id: "LunarLander-v3"
+
+# Training settings
+seed: 42
+num_processes: 4 # Número de workers paralelos
+max_episodes: 5000
+learning_rate: 0.0001
+gamma: 0.99
+value_loss_coef: 0.5
+entropy_coef: 0.01
+
+# Model architecture
+hidden_layers: [128, 128]
+
+# Logging
+log_dir: "results/logs/A3C"
+model_save_path: "results/models/A3C"

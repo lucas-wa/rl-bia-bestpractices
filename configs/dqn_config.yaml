@@ -1,0 +1,25 @@
+# DQN Hyperparameters
+agent_name: "DQN"
+env_id: "LunarLander-v3"
+
+# Training settings
+seed: 42
+num_episodes: 2000 
+max_steps_per_episode: 1000
+learning_rate: 0.001
+gamma: 0.99
+batch_size: 64
+buffer_size: 100000
+target_update_frequency: 10 # Em número de episódios
+
+# Epsilon-greedy strategy
+epsilon_start: 1.0
+epsilon_end: 0.01
+epsilon_decay: 0.995
+
+# Model architecture
+hidden_layers: [128, 128]
+
+# Logging
+log_dir: "results/logs/DQN"
+model_save_path: "results/models/DQN"
