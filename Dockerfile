@@ -25,4 +25,4 @@ COPY . .
 
 # 6. Comando padrão (pode ser sobrescrito ao rodar o container)
 # Informa ao usuário como usar a imagem.
-CMD ["echo", "Imagem pronta. Execute um script, por exemplo: 'python scripts/train.py --agent dqn'"]
+CMD ["python", "scripts/train.py", "--agent", "dqn"]

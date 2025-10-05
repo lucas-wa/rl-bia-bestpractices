@@ -59,6 +59,8 @@ def train_dqn(config):
 
         epsilon = max(config["epsilon_end"], config["epsilon_decay"] * epsilon)
 
+        logger.log_scalar("Epsilon", epsilon, i_episode)
+
         logger.log_scalar("Reward", score, i_episode)
         logger.log_scalar(
             "Average Reward (100 episodes)", np.mean(scores_window), i_episode
@@ -107,6 +109,7 @@ def worker(worker_id, config, episode_counter):
 
         while episode_counter.value < config["max_episodes"]:
             try:
+                step_counter = 0
                 state, _ = env.reset(seed=config["seed"] + worker_id)
                 episode_reward = 0
 
@@ -114,7 +117,7 @@ def worker(worker_id, config, episode_counter):
                 log_probs, entropies, values = [], [], []
 
                 done = False
-                while not done:
+                while not done: 
                     action, log_prob, entropy, value = agent.act(state)
                     next_state, reward, terminated, truncated, _ = env.step(action)
                     done = terminated or truncated
@@ -130,6 +133,7 @@ def worker(worker_id, config, episode_counter):
                     values.append(value)
 
                     state = next_state
+                    step_counter += 1
 
                 actor_loss, critic_loss, entropy_loss, advantage, loss = agent.learn(
                     states,
@@ -142,6 +146,7 @@ def worker(worker_id, config, episode_counter):
                     values,
                 )
 
+
                 logger.log_scalar(
                     f"Worker_{worker_id}/train/policy_loss", actor_loss, current_episode
                 )
@@ -151,9 +156,23 @@ def worker(worker_id, config, episode_counter):
                 logger.log_scalar(
                     f"Worker_{worker_id}/train/advantage", advantage, current_episode
                 )
-                #@TODO verificar se é mesmo a entropy_loss
+                # @TODO verificar se é mesmo a entropy_loss
+                # logger.log_scalar(
+                #     f"Worker_{worker_id}/train/explained_variance",
+                #     entropy_loss,
+                #     current_episode,
+                # )
+
                 logger.log_scalar(
-                    f"Worker_{worker_id}/train/explained_variance", entropy_loss, current_episode
+                    f"Worker_{worker_id}/train/entropy_loss",
+                    entropy_loss,
+                    current_episode,
+                )
+
+                logger.log_scalar(
+                    f"Worker_{worker_id}/train/step_counter",
+                    entropy_loss,
+                    current_episode,
                 )
 
                 scores_window.append(episode_reward)
